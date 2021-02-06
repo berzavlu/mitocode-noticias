@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react'
+import Card from './components/card';
+import './styles/main.scss';
+
+const API_URL = 'https://test.spaceflightnewsapi.net/api/v2/articles'
 
 function App() {
+  const [news, setNews] = useState([])
+
+  const getDataFromAPI = async () => {
+    try {
+      const data = await fetch(API_URL)
+      const response = await data.json()
+
+      setNews(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getDataFromAPI()
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className='mainTitle'>
+        Lista de noticias MitoCode
+      </div>
+      {news.map((data) => (
+        <Card
+          title={data.title}
+          img={data.imageUrl}
+          url={data.url}
+          description={data.summary}
+        />
+      ))}
     </div>
   );
 }
